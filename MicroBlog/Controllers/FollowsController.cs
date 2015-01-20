@@ -11,14 +11,23 @@ using MicroBlog.Models;
 
 namespace MicroBlog.Controllers
 {
-	//[System.Web.Http.RoutePrefix("api/User/{userId:int}/Follows")]
-	//[RoutePrefix("api/User/{userId:int}/Follows")]
+
+	/// <summary>
+	/// Controller to work with followed users
+	/// </summary>
     public class FollowsController : ApiController
     {
 		private BlogContext db = new BlogContext();
 
 
 		#region UserFollows
+
+		/// <summary>
+		/// Add user to the list of users followed
+		/// </summary>
+		/// <param name="userId">Id of the <see cref="UserModel">User</see>  to add followed user</param>
+		/// <param name="followed"><see cref="UserViewModel">User</see> to follow</param>
+		/// <returns><see cref="IHttpActionResult">ActionResult</see> of the operation containing <see cref="UserViewModel"/> of the follower</returns>
 		[ResponseType(typeof(UserViewModel))]
 		public async Task<IHttpActionResult> PostFollows(int userId, UserViewModel followed)
 		{
@@ -36,11 +45,11 @@ namespace MicroBlog.Controllers
 
 			if (currentUser == null || followedUser == null)
 			{
-				return BadRequest("User with the specified Id was not found");
+				return NotFound();
 			}
 
 			currentUser.Follows.Add(followedUser);
-			//db.Entry(user).State = EntityState.Modified;
+			
 			try
 			{
 				await db.SaveChangesAsync();

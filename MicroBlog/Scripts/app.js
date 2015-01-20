@@ -77,7 +77,7 @@ var UserViewToModel = function (user) {
 
 ajaxHelper = function ajaxHelper(uri, method, error, data) {
 	error("");
-	return $.ajax({
+return $.ajax({
 		type: method,
 		url: uri,
 		dataType: 'json',

@@ -11,12 +11,20 @@ using MicroBlog.Models;
 
 namespace MicroBlog.Controllers
 {
-	[RoutePrefix("api/User/{userId:int}/Followers")]
+	/// <summary>
+	/// Controller to work with user's followers
+	/// </summary>
 	public class FollowersController : ApiController
     {
 
 		private BlogContext db = new BlogContext();
 
+		/// <summary>
+		/// Add follower to user
+		/// </summary>
+		/// <param name="userId">Id of a <see cref="UserModel">User</see> to add follower to</param>
+		/// <param name="follower"><see cref="UserViewModel">User</see> to add as follower (either id or name may be empty)</param>
+		/// <returns><see cref="IHttpActionResult">ActionResult</see> of the operation containing <see cref="UserViewModel"/> of the follower</returns>
 		#region UserFollowers
 		[ResponseType(typeof(UserViewModel))]
 		public async Task<IHttpActionResult> PostFollowers(int userId, UserViewModel follower)
@@ -52,15 +60,19 @@ namespace MicroBlog.Controllers
 			return CreatedAtRoute("DefaultApi", new { id = userId, follower }, new UserViewModel { Id = followerUser.Id, Name = followerUser.Name });
 		}
 
+		/// <summary>
+		/// Delete the follower with the id specified from the list of user's followers
+		/// </summary>
+		/// <param name="userId">Id of the user to remove follower from</param>
+		/// <param name="id">Id of the user to remove from the list of followers</param>
+		/// <returns><see cref="IHttpActionResult">ActionResult</see> of the operation containing <see cref="UserViewModel"/> of the follower</returns>
 		[ResponseType(typeof(UserViewModel))]
 		public async Task<IHttpActionResult> DeleteFollowers(int userId, int id)
 		{
-			var user =
-				db.Users.Include(u => u.Followers).SingleOrDefault(u => u.Id == userId);
-			if (user == null)
-				return NotFound();
-			var follower = user.Followers.SingleOrDefault(u => u.Id == id);
-			if (follower == null)
+			var user =await db.Users.FindAsync(userId);
+			
+			var follower = await db.Users.FindAsync(id);
+			if (follower == null || user == null)
 				return NotFound();
 
 			user.Followers.Remove(follower);
@@ -72,6 +84,11 @@ namespace MicroBlog.Controllers
 			});
 		}
 
+		/// <summary>
+		/// Gets the list of the followers for the specified user
+		/// </summary>
+		/// <param name="userId">Id of the user to get followers for</param>
+		/// <returns>List of the <see cref="UserViewModel">followers</see></returns>
 		public IQueryable<UserViewModel> GetFollowers(int userId)
 		{
 			return db.Users.Include(u => u.Followers).

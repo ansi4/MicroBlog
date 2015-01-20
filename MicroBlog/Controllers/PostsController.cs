@@ -13,7 +13,7 @@ using MicroBlog.Models;
 
 namespace MicroBlog.Controllers
 {
-	[RoutePrefix("api/Users/{userId:int}")]
+	[RoutePrefix("api/User/{userId:int}")]
 	public class PostsController : ApiController
     {
 		private BlogContext db = new BlogContext();

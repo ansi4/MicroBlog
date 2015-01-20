@@ -1,5 +1,5 @@
 ﻿var postsUri = '/api/Posts/';
-var userPostsUri = '/api/Users/';
+var userPostsUri = '/api/User/';
 var postsMax = 20;
 
 var PostsViewModel = function () {
@@ -55,7 +55,7 @@ var ViewModel = function () {
 	self.newItem = ko.observable(new PostViewModel(""));
 
 	self.signUp = function() {
-		ajaxHelper("/api/Users", 'POST', self.error, ({
+		ajaxHelper(userApiUri(), 'POST', self.error, ({
 				Name: self.currentUser().name()
 		})).done(function (data) {
 			var newUser = new UserViewModel(data);
@@ -66,7 +66,7 @@ var ViewModel = function () {
 	}
 
 	self.logIn = function() {
-		ajaxHelper("/api/Users/" + self.currentUser().name(), 'GET', self.error).done(function (data) {
+		ajaxHelper(usersUri(self.currentUser().name()), 'GET', self.error).done(function (data) {
 			var newUser = new UserViewModel(data);
 			self.currentUser(newUser);
 			self.forUser().user(newUser);
@@ -75,15 +75,15 @@ var ViewModel = function () {
 	};
 
 	self.subscribe = function (post) {
-		ajaxHelper("/api/Users/" + self.currentUser().id() + "/Followers", 'POST', self.error, {
+		ajaxHelper(userApiUri(self.currentUser().id()).follows, 'POST', self.error, {
 			Id: post.author().id()
-		}.done(function (data) {
+		}).done(function (data) {
 			self.forUser(new PostsViewModel(self.currentUser()));
-		}));
+		});
 	}
 
 	self.unsubscribe = function (post) {
-		ajaxHelper("/api/Users/" + self.currentUser().id() + "/Followers/" + post.author().id(), 'DELETE', self.error).done(function (data) {
+		ajaxHelper(userApiUri(self.currentUser().id()).follows + post.author().id(), 'DELETE', self.error).done(function (data) {
 			self.forUser(new PostsViewModel(self.currentUser()));
 		});
 	}
@@ -96,7 +96,7 @@ var ViewModel = function () {
 	}
 
 	self.addItem = function() {
-		ajaxHelper("/api/Posts/", 'POST', self.error, {
+		ajaxHelper(postsUri, 'POST', self.error, {
 			Text: self.newItem().text(),
 			Author: {
 				Id: self.currentUser().id()
