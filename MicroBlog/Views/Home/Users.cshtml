@@ -1,0 +1,146 @@
+﻿@{
+	ViewBag.Title = "Users";
+}
+
+@section scripts
+{
+	@Scripts.Render("~/bundles/users");
+}
+
+@helper ListViewHelper(string itemsName, string panelId, string viewModelName, string noDataMessage, Func<string, HelperResult> itemWrapper)
+{
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<a data-toggle="collapse" data-target="#@panelId" class="btn-block collapsed" href="#" data-bind="click: @(viewModelName)().showItems">@itemsName<span class="pull-right glyphicon glyphicon-chevron"></span></a>
+			</h4>
+		</div>
+		<div id="@panelId" class="panel-body panel-collapse collapse" data-bind="with: @viewModelName">
+			<div data-bind="visible: !itemsLoaded">@Spinner.SpinnerHelper()</div>
+			<div data-bind="visible: itemsLoaded && items().length == 0">
+				<p>
+					User <span data-bind="text: name"></span> @noDataMessage
+				</p>
+			</div>
+			@itemWrapper("show")
+		</div>
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<a data-toggle="collapse" data-target="#edit@(panelId)" class="btn-block collapsed" href="#" data-bind="click: function(){}">New<span class="pull-right glyphicon glyphicon-chevron"></span></a>
+			</h4>
+		</div>
+		<div id="edit@(panelId)" class="panel-body panel-collapse collapse" data-bind="with: @(viewModelName)">
+			@itemWrapper("edit")
+			<div class="panel-danger" data-bind="visible: error">
+				<p class="alert alert-danger" data-bind="text: error"></p>
+			</div>
+		</div>
+	</div>
+}
+
+@helper UserLayout(string mode)
+{
+	switch (mode)
+	{
+		case "edit":
+		{
+			<form class="input-group" data-bind="submit: addItem">
+				<input type="number" class="form-control" placeholder="User Id" data-bind="value: newItem().id, valueUpdate: 'keyup', clearNewUser: newItem().name()" />
+				<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">Submit</button>
+				</span>
+			</form>
+			<p class="text-center">or</p>
+			<form class="input-group" data-bind="submit: addItem">
+				<input type="text" class="form-control" placeholder="User Name" data-bind="value: newItem().name, valueUpdate: 'keyup', clearNewUser: newItem().id()"/>
+				<span class="input-group-btn"><button class="btn btn-default" type="submit">Submit</button></span>
+			</form>
+			break;
+		}
+		default:
+		{
+			<ul class="list-unstyled" data-bind="foreach: items().sort(userSort)">
+				<li>
+					<a href="#" data-bind="text: name, click: selectUser"></a>
+					<a href="#" class="glyphicon glyphicon-minus-sign pull-right" data-bind="click: $parent.removeItem"></a>
+				</li>
+			</ul>
+			break;
+		}
+	}
+}
+
+@helper PostLayout(string mode)
+{
+	switch (mode)
+	{
+		case "edit":
+		{
+			<form class="form" data-bind="submit: addItem">
+				<textarea class="form-control" placeholder="Post Text" data-bind="value: newItem().text" rows="3"></textarea>
+				<button class="btn btn-default btn-block" type="submit">Submit</button>
+			</form>
+			break;
+		}
+		default:
+		{
+			<div data-bind="foreach: items().sort(postSort)" class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-body"><span data-bind="text: text"></span><a href="#" class="glyphicon glyphicon-minus-sign pull-right" data-bind="click: $parent.removeItem"></a></div>
+					<div class="panel-footer"><span data-bind="text: author().name"></span> at <span data-bind="text: time"></span></div>
+				</div>
+			</div>
+			break;
+		}
+	}
+}
+<div class="page-header">
+	<h2>Users</h2>
+</div>
+<div class="row">
+	<div class="col-md-2">
+		<div class="nav nav-pills nav-stacked">
+			<button class="btn btn-block btn-default" type="button" data-bind="click: createUser">Create</button>
+			<div data-bind="visible: loading">@Spinner.SpinnerHelper()</div>
+			<ul class="nav nav-pills nav-stacked" data-bind="foreach: users().sort(userSort)">
+				<li role="presentation" data-bind="css: active">
+					<a href="#" data-bind="click: selectUser">
+						<span data-bind="text: name"></span>
+						<span data-bind="click: deleteUser" class="glyphicon glyphicon-minus-sign pull-right"></span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div>
+			<!-- ko if: creatingUser -->
+			<div>
+				<h2>Create User</h2>
+				<form class="input-group" data-bind="submit: addUser">
+					<input type="text" class="form-control" placeholder="User Name" data-bind="value: newUser().name"/>
+					<span class="input-group-btn"><button class="btn btn-default" type="submit">Submit</button></span>
+				</form>
+			</div>
+
+			<!-- /ko -->
+			<!-- ko if: selectedUser -->
+			<h2 data-bind="text: selectedUser().name"></h2>
+			<div class="panel-group" data-bind="with: selectedUser">
+				@ListViewHelper("Posts", "userPosts", "postsView", " doesn't have posts yet", PostLayout)
+				@ListViewHelper("Followers", "userFollowers", "followersView", " isn't followed by anybody", UserLayout)
+				@ListViewHelper("Followed users", "userFollowed", "followedView", " doesn't follow anybody", UserLayout)
+			</div>
+			<!-- /ko -->
+			<!-- ko ifnot: selectedUser -->
+			<!-- ko ifnot: creatingUser -->
+			<p>Please select a user</p>
+			<!-- /ko -->
+			<!-- /ko -->
+			<div class="alert-danger" data-bind="visible: error">
+				<p data-bind="text: error"></p>
+			</div>
+		</div>
+	</div>
+</div>
+

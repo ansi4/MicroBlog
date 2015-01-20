@@ -1,0 +1,101 @@
+﻿@section scripts
+{
+	@Scripts.Render("~/bundles/posts")
+}
+@{
+    ViewBag.Title = "Posts";
+}
+@helper PostPresentation(bool showSubscribe)
+{
+	<!-- ko if: posts().length > 0 -->
+	<div class="panel-group" data-bind="foreach: posts().sort(postSort)">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<p data-bind="text: text"></p>
+			</div>
+			<div class="panel-footer">
+				<span data-bind="text: author().name"></span>
+					@{
+						if (showSubscribe)
+						{
+							<span data-bind="visible: $root.currentUser().id() !== '' && author().id() !== $root.currentUser().id() && ko.utils.arrayFirst($root.currentUser().following(), function(user){ user().id() === author().id()}) === null" >
+							<a href="#" data-bind="click: $root.subscribe" class="glyphicon glyphicon-plus-sign"></a>
+							</span>
+							<span data-bind="visible: $root.currentUser().id() !== '' && author().id() !== $root.currentUser().id() && ko.utils.arrayFirst($root.currentUser().following(), function(user){
+										user().id() === author().id()})">
+							<a href="#" data-bind="click: $root.unsubscribe" class="glyphicon glyphicon-minus-sign"></a>
+							</span>
+						}
+						else
+						{
+							<span>
+								<a href="#" data-bind="click: $root.unsubscribe" class="glyphicon glyphicon-minus-sign"></a>
+							</span>
+						}
+}
+				at <span data-bind="text: time"></span>
+			</div>
+		</div>
+	</div>
+	<!-- /ko -->
+	<!-- ko if: error -->
+	<div class="panel-danger">
+		<div class="alert alert-danger" data-bind="text: error"></div>
+	</div>
+	<!-- /ko -->
+	<div data-bind="visible: loading">@Spinner.SpinnerHelper()</div>
+	<div data-bind="visible: hasMore">
+		<button type="button" class="btn btn-default btn-block" data-bind="click: getPosts">Load More</button>
+	</div>
+	
+}
+
+<h2>Posts</h2>
+<div class="row">
+	<div class="col-md-2">
+		<div data-bind="visible: currentUser().id() !== ''">
+			<p>Hi, <span data-bind="text: currentUser().name"></span></p>
+			<a href="#" class="btn btn-default" data-bind="click: logOut">Log out</a>
+		</div>
+		<div data-bind="visible: currentUser().id() === ''">
+			<form class="input">
+				<input class="form-control" type="text" placeholder="User Name" data-bind="value: currentUser().name"/>
+				<button type="button" class="btn btn-default" data-bind="click: logIn">Log in</button>
+				<button type="submit" data-bind="click: signUp" class="btn btn-default">Sign up</button>
+			</form>
+			<!-- ko if: error -->
+			<div class="panel-danger">
+				<div class="alert alert-danger" data-bind="text: error"></div>
+			</div>
+			<!-- /ko -->
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div role="tabpanel">
+			<ul id="tabs" class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#all" id="allItemsTab" aria-controls="allUsers" role="tab" data-toggle="tab">All users</a></li>
+				<li role="presentation" data-bind="visible: currentUser().id() > 0"><a href="#followed" aria-controls="followedUsers" role="tab" data-toggle="tab" data-bind="click: forUser().initialLoad">Followed by me</a></li>
+			</ul>
+		</div>
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane fade in active" data-bind="with: allPosts" id="all">
+				<div class="" id="newPost">
+					<form class="form" data-bind="submit: $root.addItem">
+						<textarea class="form-control" placeholder="Post Text" data-bind="value: $root.newItem().text" rows="3"></textarea>
+						<button class="btn btn-default btn-block" type="submit">Submit</button>
+					</form>
+					<!-- ko if: error -->
+					<div class="panel-danger">
+						<div class="alert alert-danger" data-bind="text: error"></div>
+					</div>
+					<!-- /ko -->
+				</div>
+				@PostPresentation(true)
+			</div>
+			<div role="tabpanel" class="tab-pane fade" data-bind="with: forUser" id="followed">
+				@PostPresentation(false)
+			</div>
+			
+		</div>
+	</div>
+</div>
