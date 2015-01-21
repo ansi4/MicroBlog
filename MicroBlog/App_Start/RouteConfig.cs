@@ -15,7 +15,7 @@ namespace MicroBlog
 
 			routes.MapRoute(
 				name: "Default",
-				url: "{action}",
+				url: "{controller}/{action}",
 				defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
 			);
 		}

@@ -36,7 +36,6 @@ namespace MicroBlog.Controllers
 
 			var currUser = await db.Users.FindAsync(userId);
 			UserModel followerUser;
-			List<UserModel> users;
 			if (follower.Id != 0)
 				followerUser = await db.Users.FindAsync(follower.Id);
 			else
