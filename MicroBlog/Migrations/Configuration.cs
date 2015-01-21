@@ -22,7 +22,7 @@ namespace MicroBlog.Migrations
         }
 
         protected override void Seed(MicroBlog.Models.BlogContext context)
-        {
+        {/*
 			var newUsers =	new string[50].Select((s, i) => new UserModel(){Name = "User" + i}).ToArray();
 			context.Users.AddOrUpdate(model => model.Name, newUsers);
 	        context.SaveChanges();
@@ -45,7 +45,7 @@ namespace MicroBlog.Migrations
 	        }
 
 			newUsers.ForEach(user => context.Users.AddOrUpdate(u => u.Id,user));
-			posts.ForEach(post => context.Posts.AddOrUpdate(p => p.Text,  post));
+			posts.ForEach(post => context.Posts.AddOrUpdate(p => p.Text,  post));*/
         }
     }
 }

@@ -78,13 +78,16 @@ var ViewModel = function () {
 		ajaxHelper(userApiUri(self.currentUser().id()).follows, 'POST', self.error, {
 			Id: post.author().id()
 		}).done(function (data) {
-			self.forUser(new PostsViewModel(self.currentUser()));
+			self.forUser(new PostsViewModel());
+			self.forUser().user(self.currentUser());
 		});
 	}
 
 	self.unsubscribe = function (post) {
 		ajaxHelper(userApiUri(self.currentUser().id()).follows + post.author().id(), 'DELETE', self.error).done(function (data) {
-			self.forUser(new PostsViewModel(self.currentUser()));
+			self.forUser().posts.remove(function(pst) {
+				return pst.author().id() === post.author().id();
+			});
 		});
 	}
 

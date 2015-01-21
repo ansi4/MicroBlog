@@ -590,9 +590,37 @@
         </member>
         <member name="M:MicroBlog.Controllers.UsersController.GetUsers">
             <summary>
-            
+            Gets the list of all users
             </summary>
-            <returns></returns>
+            <returns>The list of users</returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.UsersController.GetUser(System.Int32)">
+            <summary>
+            Gets user details
+            </summary>
+            <param name="id">User id to get details for</param>
+            <returns>User detaile</returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.UsersController.GetUser(System.String)">
+            <summary>
+            Gets user details by name
+            </summary>
+            <param name="name">User name to get details for</param>
+            <returns>User instance</returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.UsersController.PostUser(MicroBlog.Models.UserViewModel)">
+            <summary>
+            Adds new user
+            </summary>
+            <param name="user">User to be added</param>
+            <returns>User added</returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.UsersController.DeleteUser(System.Int32)">
+            <summary>
+            Delete the user with the specified id
+            </summary>
+            <param name="id">Id of the user to delete</param>
+            <returns>User deleted</returns>
         </member>
         <member name="T:Edm_EntityMappingGeneratedViews.ViewsForBaseEntitySets3b24c4815322a98ec2bbc3386c88c85a89a95363427fc8fd693078cee4c15715">
             <summary>

@@ -55,8 +55,8 @@ var UserViewModel = function(user) {
 	self.id = ko.observable(user.Id || "");
 	self.name = ko.observable(user.Name || "");
 	self.following = ko.observableArray();
-	if (user.following) {
-		ko.helper.forEach(user.Follows, function (followed) {
+	if (user.Follows) {
+		ko.utils.arrayForEach(user.Follows, function (followed) {
 			self.following.push(new UserViewModel(followed))
 		});
 	};
