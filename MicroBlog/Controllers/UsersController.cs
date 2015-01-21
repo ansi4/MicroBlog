@@ -34,9 +34,9 @@ namespace MicroBlog.Controllers
 #region Users
         // GET: api/Users
 		/// <summary>
-		/// 
+		/// Gets the list of all users
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>The list of users</returns>
 		[Route("")]
         public IQueryable<UserViewModel> GetUsers()
         {
@@ -47,8 +47,14 @@ namespace MicroBlog.Controllers
             });
         }
 
+
+		// GET: api/Users/5
+		/// <summary>
+		/// Gets user details
+		/// </summary>
+		/// <param name="id">User id to get details for</param>
+		/// <returns>User detaile</returns>
 		[Route("{id:int}")]
-        // GET: api/Users/5
         [ResponseType(typeof(UserDetailViewModel))]
 		public async Task<IHttpActionResult> GetUser(int id)
         {
@@ -68,6 +74,11 @@ namespace MicroBlog.Controllers
         }
 
 		// GET: api/Users/abc
+		/// <summary>
+		/// Gets user details by name
+		/// </summary>
+		/// <param name="name">User name to get details for</param>
+		/// <returns>User instance</returns>
 		[ResponseType(typeof(UserDetailViewModel))]
 		[Route("{name}")]
 		public async Task<IHttpActionResult> GetUser(string name)
@@ -88,6 +99,11 @@ namespace MicroBlog.Controllers
 		}
 		
         // POST: api/Users
+		/// <summary>
+		/// Adds new user
+		/// </summary>
+		/// <param name="user">User to be added</param>
+		/// <returns>User added</returns>
 		[Route("")]
         [ResponseType(typeof(UserViewModel))]
 		public async Task<IHttpActionResult> PostUser(UserViewModel user)
@@ -122,6 +138,11 @@ namespace MicroBlog.Controllers
         }
 
         // DELETE: api/Users/5
+		/// <summary>
+		/// Delete the user with the specified id
+		/// </summary>
+		/// <param name="id">Id of the user to delete</param>
+		/// <returns>User deleted</returns>
         [ResponseType(typeof(UserViewModel))]
 		[Route("{id:int}")]
 		public async Task<IHttpActionResult> DeleteUser(int id)
