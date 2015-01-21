@@ -18,13 +18,12 @@
 					@{
 						if (showSubscribe)
 						{
-							<span data-bind="visible: $root.currentUser().id() !== '' && author().id() !== $root.currentUser().id() && ko.utils.arrayFirst($root.currentUser().following(), function(user){ user.id() === author().id()}) === null" >
-							<a href="#" data-bind="click: $root.subscribe" class="glyphicon glyphicon-plus-sign"></a>
+							<span data-bind="visible: $root.currentUser().id() !== '' && author().id() !== $root.currentUser().id() && !findFollowing($root.currentUser(), author())">
+								<a href="#" data-bind="click: $root.subscribe" class="glyphicon glyphicon-plus-sign"></a>
 							</span>
-							<span data-bind="visible: $root.currentUser().id() !== '' && author().id() !== $root.currentUser().id() && ko.utils.arrayFirst($root.currentUser().following(), function(user){
-										user.id() === author().id()})">
-							<a href="#" data-bind="click: $root.unsubscribe" class="glyphicon glyphicon-minus-sign"></a>
-							</span>
+	<span data-bind="visible: $root.currentUser().id() !== '' && author().id() !== $root.currentUser().id() && findFollowing($root.currentUser(), author())">
+		<a href="#" data-bind="click: $root.unsubscribe" class="glyphicon glyphicon-minus-sign"></a>
+	</span>
 						}
 						else
 						{

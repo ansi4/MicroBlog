@@ -2,6 +2,14 @@
 var userPostsUri = '/api/User/';
 var postsMax = 20;
 
+function findFollowing(currentUser, author) {
+	var res = ko.utils.arrayFirst(currentUser.following(), function (user) { return userEquals(user, author); });
+	return res;
+}
+var userEquals = function(user1, user2) {
+	return user1.id() === user2.id();
+}
+
 var PostsViewModel = function () {
 	var self = this;
 	self.error = ko.observable();
@@ -55,11 +63,11 @@ var ViewModel = function () {
 	self.newItem = ko.observable(new PostViewModel(""));
 
 	self.signUp = function() {
-		ajaxHelper(userApiUri(), 'POST', self.error, ({
+		ajaxHelper(usersUri(), 'POST', self.error, ({
 				Name: self.currentUser().name()
 		})).done(function (data) {
-			var newUser = new UserViewModel(data);
-			self.forUser().user(newUser);
+				var newUser = new UserViewModel(data);
+				self.forUser().user(newUser);
 				self.currentUser(newUser);
 				saveCurrentUser(data);
 			});
@@ -78,16 +86,23 @@ var ViewModel = function () {
 		ajaxHelper(userApiUri(self.currentUser().id()).follows, 'POST', self.error, {
 			Id: post.author().id()
 		}).done(function (data) {
+			self.currentUser().following().push(post.author());
 			self.forUser(new PostsViewModel());
-			self.forUser().user(self.currentUser());
+			self.forUser().user = self.currentUser;
+			saveCurrentUser(self.currentUser);
 		});
 	}
 
 	self.unsubscribe = function (post) {
 		ajaxHelper(userApiUri(self.currentUser().id()).follows + post.author().id(), 'DELETE', self.error).done(function (data) {
+			self.currentUser().following.remove(function(usr) {
+				return usr.id() === post.author().id();
+			});
 			self.forUser().posts.remove(function(pst) {
 				return pst.author().id() === post.author().id();
 			});
+
+			saveCurrentUser(self.currentUser);;
 		});
 	}
 

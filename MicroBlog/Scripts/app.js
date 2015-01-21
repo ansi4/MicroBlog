@@ -31,8 +31,24 @@ var getCurrentUser = function() {
 	return user;
 }
 
-var saveCurrentUser = function(user) {
-	localStorage['user'] = JSON.stringify(user);
+var saveCurrentUser = function (user) {
+	if (typeof user === "function") {
+		var userObj = new Object();
+		userObj.Id = user().id(),
+		userObj.Name = user().name(),
+		userObj.Follows = [],
+		ko.utils.arrayForEach(user().following(), function (followed) {
+			var nf = {
+				Id: followed.id(),
+				Name: followed.name()
+			};
+			userObj.Follows.push(nf);
+		});
+
+		localStorage['user'] = JSON.stringify(userObj);
+	} else {
+		localStorage['user'] = JSON.stringify(user);
+	}
 }
 
 var forgetUser = function() {
@@ -57,7 +73,7 @@ var UserViewModel = function(user) {
 	self.following = ko.observableArray();
 	if (user.Follows) {
 		ko.utils.arrayForEach(user.Follows, function (followed) {
-			self.following.push(new UserViewModel(followed))
+			self.following.push(new UserViewModel(followed));
 		});
 	};
 }
