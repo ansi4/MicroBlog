@@ -522,6 +522,78 @@
             <param name="followed"><see cref="T:MicroBlog.Models.UserViewModel">User</see> to follow</param>
             <returns><see cref="T:System.Web.Http.IHttpActionResult">ActionResult</see> of the operation containing <see cref="T:MicroBlog.Models.UserViewModel"/> of the follower</returns>
         </member>
+        <member name="M:MicroBlog.Controllers.FollowsController.DeleteFollows(System.Int32,System.Int32)">
+            <summary>
+            Removes the specified user from user's following list
+            </summary>
+            <param name="userId">User id to unfollow</param>
+            <param name="id">Followed user id to remove</param>
+            <returns><see cref="T:System.Web.Http.IHttpActionResult"/> with details about removed user</returns>
+        </member>
+        <member name="T:MicroBlog.Controllers.PostsController">
+            <summary>
+            Controller to operate on posts
+            </summary>
+        </member>
+        <member name="M:MicroBlog.Controllers.PostsController.PostUserPost(System.Int32,MicroBlog.Models.PostViewModel)">
+            <summary>
+            Add post
+            </summary>
+            <param name="userId">Id of the user  who created post</param>
+            <param name="post"><see cref="T:MicroBlog.Models.PostViewModel">Post</see> details. Every property except Text should be ommited</param>
+            <returns>New post details</returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.PostsController.GetUserPosts(System.Int32,System.Int64,System.Int32)">
+            <summary>
+            Fetches latest posts created by specified user
+            </summary>
+            <param name="userId">Id of the posts author</param>
+            <param name="maxId">Last fetched post id. 0 to get most recent</param>
+            <param name="limit">Post count to fetch</param>
+            <returns>The list of user's <see cref="T:MicroBlog.Models.PostViewModel">Posts</see></returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.PostsController.GetPosts(System.Int32,System.Int64,System.Int32)">
+            <summary>
+            Gets most recent posts of user's followers
+            </summary>
+            <param name="userId">User if to get followed users' posts for</param>
+            <param name="maxId">Last post id retrieved. 0 to get most recent</param>
+            <param name="limit">Post count to fetch</param>
+            <returns>The list of followed users' <see cref="T:MicroBlog.Models.PostViewModel">Posts</see></returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.PostsController.PostPosts(MicroBlog.Models.PostViewModel)">
+            <summary>
+            Publish new post
+            </summary>
+            <param name="postModel">Post data. CreationTime and Id could be omitted</param>
+            <returns>New post details</returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.PostsController.GetPosts(System.Int64,System.Int32)">
+            <summary>
+            Gets most recent posts of all users
+            </summary>
+            <param name="maxId">Last post id retrieved. 0 to get most recent</param>
+            <param name="limit">Post count to fetch</param>
+            <returns>The list of most recent posts <see cref="T:MicroBlog.Models.PostViewModel">Posts</see></returns>
+        </member>
+        <member name="M:MicroBlog.Controllers.PostsController.DeletePost(System.Int64)">
+            <summary>
+            Remove post with the specified id
+            </summary>
+            <param name="id">Id of the post to be removed</param>
+            <returns>Removed post details</returns>
+        </member>
+        <member name="T:MicroBlog.Controllers.UsersController">
+            <summary>
+            Controller to operate on users
+            </summary>
+        </member>
+        <member name="M:MicroBlog.Controllers.UsersController.GetUsers">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Edm_EntityMappingGeneratedViews.ViewsForBaseEntitySets3b24c4815322a98ec2bbc3386c88c85a89a95363427fc8fd693078cee4c15715">
             <summary>
             Implements a mapping view cache.

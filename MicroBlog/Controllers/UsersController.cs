@@ -23,6 +23,9 @@ using Microsoft.AspNet.Identity;
 
 namespace MicroBlog.Controllers
 {
+	/// <summary>
+	/// Controller to operate on users
+	/// </summary>
 	[RoutePrefix("api/Users")]
 	public class UsersController : ApiController
     {
@@ -30,6 +33,10 @@ namespace MicroBlog.Controllers
 
 #region Users
         // GET: api/Users
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		[Route("")]
         public IQueryable<UserViewModel> GetUsers()
         {

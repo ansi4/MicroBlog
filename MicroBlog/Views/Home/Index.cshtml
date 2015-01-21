@@ -79,6 +79,7 @@
 		</div>
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane fade in active" data-bind="with: allPosts" id="all">
+				<!-- ko if: $root.currentUser().id() > 0 -->
 				<div class="" id="newPost">
 					<form class="form" data-bind="submit: $root.addItem">
 						<textarea class="form-control" placeholder="Post Text" data-bind="value: $root.newItem().text" rows="3"></textarea>
@@ -90,6 +91,7 @@
 					</div>
 					<!-- /ko -->
 				</div>
+				<!-- /ko -->
 				@PostPresentation(true)
 			</div>
 			<div role="tabpanel" class="tab-pane fade" data-bind="with: forUser" id="followed">

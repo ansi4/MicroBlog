@@ -62,6 +62,12 @@ namespace MicroBlog.Controllers
 			return CreatedAtRoute("DefaultApi", new { id = userId, followed = followed }, UserViewModel.FromUser(followedUser));
 		}
 
+		/// <summary>
+		/// Removes the specified user from user's following list
+		/// </summary>
+		/// <param name="userId">User id to unfollow</param>
+		/// <param name="id">Followed user id to remove</param>
+		/// <returns><see cref="IHttpActionResult"/> with details about removed user</returns>
 		[ResponseType(typeof(UserViewModel))]
 		public async Task<IHttpActionResult> DeleteFollows(int userId, int id)
 		{
